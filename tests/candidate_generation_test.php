@@ -126,6 +126,25 @@ final class candidate_generation_test extends advanced_testcase {
         }
 
         (new snapshot_service())->sync_category($category, 15);
+
+        // This test targets the candidate generator, so make its snapshot input explicitly exact.
+        $normalized = normalizer::text('What is the capital of France?');
+        $params = ['categoryid' => $category->id];
+        $DB->set_field_select(
+            'qbank_duplicate_snapshot',
+            'normalizedtext',
+            $normalized,
+            'categoryid = :categoryid',
+            $params
+        );
+        $DB->set_field_select(
+            'qbank_duplicate_snapshot',
+            'texthash',
+            hash('sha256', $normalized),
+            'categoryid = :categoryid',
+            $params
+        );
+
         (new candidate_generator())->generate((int)$category->id, 15);
 
         // A complete graph would contain 66 pairs. The exact cluster needs only N - 1 edges.
