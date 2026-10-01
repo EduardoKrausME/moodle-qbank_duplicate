@@ -22,6 +22,7 @@ use context_course;
 /**
  * Tests access defaults for the report.
  *
+ * @coversNothing
  * @package   qbank_duplicate
  * @copyright 2026 Eduardo Kraus
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
