@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="question/bank/duplicate/db" VERSION="20260930" COMMENT="XMLDB file for qbank_duplicate"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd">
+    <TABLES>
+        <TABLE NAME="qbank_duplicate_scan" COMMENT="Duplicate scan runs">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="contextid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="status" TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT="queued" SEQUENCE="false"/>
+                <FIELD NAME="phase" TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT="queued" SEQUENCE="false"/>
+                <FIELD NAME="totalquestions" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="processedquestions" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="totalcandidates" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="processedcandidates" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="aicalls" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="aierrors" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="message" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="timestarted" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="timefinished" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="categoryfk" TYPE="foreign" FIELDS="categoryid" REFTABLE="question_categories"
+                     REFFIELDS="id"/>
+                <KEY NAME="contextfk" TYPE="foreign" FIELDS="contextid" REFTABLE="context" REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="categorystatus" UNIQUE="false" FIELDS="categoryid,status"/>
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="qbank_duplicate_snapshot" COMMENT="Cached normalized latest question versions">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="questionbankentryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="versionno" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+                <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="contextid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="qtype" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" SEQUENCE="false"/>
+                <FIELD NAME="sourcehash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="texthash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="answerhash" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="answersummary" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="semantictext" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="normalizedtext" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="keywords" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="minhash" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="lastscanid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="entryfk" TYPE="foreign" FIELDS="questionbankentryid" REFTABLE="question_bank_entries"
+                     REFFIELDS="id"/>
+                <KEY NAME="questionfk" TYPE="foreign" FIELDS="questionid" REFTABLE="question" REFFIELDS="id"/>
+                <KEY NAME="categoryfk" TYPE="foreign" FIELDS="categoryid" REFTABLE="question_categories"
+                     REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="entryuniq" UNIQUE="true" FIELDS="questionbankentryid"/>
+                <INDEX NAME="categoryidx" UNIQUE="false" FIELDS="categoryid"/>
+                <INDEX NAME="questionidx" UNIQUE="false" FIELDS="questionid"/>
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="qbank_duplicate_bucket" COMMENT="LSH and heuristic candidate buckets">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="snapshotid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="bucketkey" TYPE="char" LENGTH="80" NOTNULL="true" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="snapshotfk" TYPE="foreign" FIELDS="snapshotid" REFTABLE="qbank_duplicate_snapshot"
+                     REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="snapshotbucketuniq" UNIQUE="true" FIELDS="snapshotid,bucketkey"/>
+                <INDEX NAME="categorybucket" UNIQUE="false" FIELDS="categoryid,bucketkey"/>
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="qbank_duplicate_pair" COMMENT="Candidate pairs and semantic decisions">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="entrya" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="entryb" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="hasha" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="hashb" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="heuristicscore" TYPE="number" LENGTH="6" DECIMALS="5" NOTNULL="true" DEFAULT="0"
+                       SEQUENCE="false"/>
+                <FIELD NAME="heuristics" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="classification" TYPE="char" LENGTH="32" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="confidence" TYPE="number" LENGTH="6" DECIMALS="5" NOTNULL="true" DEFAULT="0"
+                       SEQUENCE="false"/>
+                <FIELD NAME="reason" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="evidence" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="state" TYPE="char" LENGTH="24" NOTNULL="true" DEFAULT="candidate" SEQUENCE="false"/>
+                <FIELD NAME="aierror" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="lastscanid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="categoryfk" TYPE="foreign" FIELDS="categoryid" REFTABLE="question_categories"
+                     REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="pairuniq" UNIQUE="true" FIELDS="categoryid,entrya,entryb"/>
+                <INDEX NAME="categorystate" UNIQUE="false" FIELDS="categoryid,state"/>
+                <INDEX NAME="scanstate" UNIQUE="false" FIELDS="lastscanid,state"/>
+                <INDEX NAME="entryaidx" UNIQUE="false" FIELDS="entrya"/>
+                <INDEX NAME="entrybidx" UNIQUE="false" FIELDS="entryb"/>
+            </INDEXES>
+        </TABLE>
+    </TABLES>
+</XMLDB>
