@@ -11,7 +11,7 @@ pair has survived those local filters. No question is deleted automatically.
 
 A scan works in four layers:
 
-1. The latest non-hidden version of each question in the selected category is normalized and cached
+1. The latest non-hidden revision of each question in the selected category is normalized and cached
    by `questionbankentryid` and content hash.
 2. Cheap indexes are generated from exact normalized-text hashes, answer signatures, significant keywords and MinHash
    bands.
@@ -42,7 +42,7 @@ evidence. Teachers can open either question, mark a pair as **not duplicate**, o
 
 A `notduplicate` decision suppresses the pair while the two question source hashes remain unchanged. Question lifecycle
 events invalidate non-ignored comparisons and cached snapshots immediately. If either question receives a new/changed
-version, that pair may therefore be reconsidered on the next scan.
+revision, that pair may therefore be reconsidered on the next scan.
 
 An `ignored` pair is deliberately stronger: it remains suppressed even if the question later changes, so a pair
 explicitly dismissed by the teacher does not keep reappearing. Nothing is deleted from the question bank.
