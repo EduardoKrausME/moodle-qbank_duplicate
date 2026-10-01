@@ -1,26 +1,11 @@
 # qbank_duplicate
 
-`qbank_duplicate` is a Moodle 4.5+ question-bank plugin that finds exact, near-textual, and semantic duplicate questions
+`qbank_duplicate` is a Moodle question-bank plugin that finds exact, near-textual, and semantic duplicate questions
 while avoiding an N² AI comparison of the whole bank.
 
 The plugin is intentionally conservative: PHP performs normalization, hashing, answer signatures, keywords, MinHash/LSH
 bucketing, candidate scoring, cache invalidation, permissions, batching and progress tracking. AI is used only after a
 pair has survived those local filters. No question is deleted automatically.
-
-## Requirements
-
-- Moodle 4.5 or later.
-- `local_ai_bridge >= 2026093001`: https://github.com/EduardoKrausME/moodle-local_ai_bridge/
-- The bridge purpose `qbankduplicate-compare` must be enabled and routed for the users who run semantic scans.
-
-`version.php` declares the dependency explicitly. This plugin does not contain API keys, provider endpoints, model
-settings or direct OpenAI/Gemini/Claude/Ollama calls.
-
-All AI calls are made only through:
-
-```php
-\local_ai_bridge\api::generate('qbankduplicate-compare', $messages);
-```
 
 ## How it scales
 
@@ -92,34 +77,3 @@ Editing teachers and managers receive these capabilities by default. Students do
 
 These are safety valves, not accuracy controls. Raising them can find more borderline pairs, but it also increases
 database work and AI consumption.
-
-## Tests
-
-PHPUnit coverage includes:
-
-- normalization and stable hashing;
-- MinHash determinism;
-- candidate generation;
-- invalidation after a question changes;
-- persistence of ignored pairs;
-- capability defaults;
-- strict AI response parsing.
-
-The GitHub Actions workflow tests PostgreSQL and MariaDB, Moodle 4.5 and a current Moodle branch,
-installs `local_ai_bridge` as a required extra plugin, runs `moodle-plugin-ci`, and
-runs `EduardoKrausME/moodle-plugin-validate`.
-
-## Installation
-
-Install the directory as:
-
-```
-question/bank/duplicate
-```
-
-Then complete the Moodle upgrade, configure the `qbankduplicate-compare` purpose in AI Bridge, and open **Question
-bank → Duplicate questions** while viewing the category you want to analyse.
-
-## License
-
-GNU GPL v3 or later.
