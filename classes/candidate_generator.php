@@ -42,6 +42,42 @@ class candidate_generator {
         $newpending = 0;
         $stats = ['active' => 0, 'reused' => 0, 'suppressed' => 0, 'newpending' => 0];
 
+        // Exact normalized-text duplicates must not depend on LSH/keyword bucket limits.
+        $exactsql = "SELECT texthash, COUNT(1) AS snapshotcount
+                       FROM {qbank_duplicate_snapshot}
+                      WHERE categoryid = :categoryid
+                        AND texthash <> :emptyhash
+                   GROUP BY texthash
+                     HAVING COUNT(1) > 1
+                   ORDER BY texthash";
+        $exactclusters = $DB->get_recordset_sql($exactsql, [
+            'categoryid' => $categoryid,
+            'emptyhash' => hash('sha256', ''),
+        ]);
+        foreach ($exactclusters as $cluster) {
+            $snapshots = array_values($DB->get_records(
+                'qbank_duplicate_snapshot',
+                ['categoryid' => $categoryid, 'texthash' => (string)$cluster->texthash],
+                'answerhash ASC, questionbankentryid ASC'
+            ));
+            for ($i = 1; $i < count($snapshots); $i++) {
+                $this->consider(
+                    $snapshots[$i - 1],
+                    $snapshots[$i],
+                    $categoryid,
+                    $scanid,
+                    $counts,
+                    $seen,
+                    $maxperquestion,
+                    $newpending,
+                    $maxnew,
+                    $stats,
+                    true
+                );
+            }
+        }
+        $exactclusters->close();
+
         $sql = "SELECT bucketkey, COUNT(1) AS bucketcount
                   FROM {qbank_duplicate_bucket}
                  WHERE categoryid = :categoryid
@@ -108,15 +144,15 @@ class candidate_generator {
     private function consider(
         stdClass $a,
         stdClass $b,
-        int       $categoryid,
-        int       $scanid,
-        array     &$counts,
-        array     &$seen,
-        int       $maxperquestion,
-        int       &$newpending,
-        int       $maxnew,
-        array     &$stats,
-        bool      $forceexact
+        int $categoryid,
+        int $scanid,
+        array &$counts,
+        array &$seen,
+        int $maxperquestion,
+        int &$newpending,
+        int $maxnew,
+        array &$stats,
+        bool $forceexact
     ): void {
         $ea = (int)$a->questionbankentryid;
         $eb = (int)$b->questionbankentryid;
