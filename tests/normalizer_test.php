@@ -21,6 +21,7 @@ use advanced_testcase;
 /**
  * Tests for deterministic text preprocessing.
  *
+ * @coversNothing
  * @package   qbank_duplicate
  * @copyright 2026 Eduardo Kraus
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
