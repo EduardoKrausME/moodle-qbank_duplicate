@@ -16,7 +16,7 @@
 
 namespace qbank_duplicate\local\privacy;
 
-use core_privacy\local\metadata\null_provider;
+use core_privacy\metadata\null_provider;
 
 /**
  * Privacy provider.
