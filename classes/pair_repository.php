@@ -46,13 +46,13 @@ class pair_repository {
      * @return string Result state: active, ignored, notduplicate, reused, or budget.
      */
     public static function upsert_candidate(
-        int       $categoryid,
+        int $categoryid,
         stdClass $a,
         stdClass $b,
-        float     $score,
-        array     $heuristics,
-        int       $scanid,
-        bool      $allownew = true
+        float $score,
+        array $heuristics,
+        int $scanid,
+        bool $allownew = true
     ): string {
         global $DB;
 
