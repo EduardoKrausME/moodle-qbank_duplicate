@@ -22,6 +22,7 @@ use stdClass;
 /**
  * Tests local candidate generation and snapshot invalidation.
  *
+ * @coversNothing
  * @package   qbank_duplicate
  * @copyright 2026 Eduardo Kraus
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
