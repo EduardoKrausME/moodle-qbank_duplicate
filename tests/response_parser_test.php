@@ -23,6 +23,7 @@ use qbank_duplicate\ai\response_parser;
 /**
  * Tests for strict AI JSON parsing.
  *
+ * @coversNothing
  * @package   qbank_duplicate
  * @copyright 2026 Eduardo Kraus
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
