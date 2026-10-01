@@ -65,9 +65,6 @@
                      REFFIELDS="id"/>
             </KEYS>
             <INDEXES>
-                <INDEX NAME="entryuniq" UNIQUE="true" FIELDS="questionbankentryid"/>
-                <INDEX NAME="categoryidx" UNIQUE="false" FIELDS="categoryid"/>
-                <INDEX NAME="questionidx" UNIQUE="false" FIELDS="questionid"/>
             </INDEXES>
         </TABLE>
 
