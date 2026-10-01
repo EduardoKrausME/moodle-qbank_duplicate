@@ -26,6 +26,7 @@ use moodle_exception;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class response_parser {
+    /** @var string[] */
     public const CLASSIFICATIONS = [
         'same_question',
         'strongly_overlapping',

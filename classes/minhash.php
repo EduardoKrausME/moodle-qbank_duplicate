@@ -24,7 +24,10 @@ namespace qbank_duplicate;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class minhash {
+    /** @var int */
     private const SIGNATURES = 12;
+
+    /** @var int */
     private const BANDSIZE = 3;
 
     /**
