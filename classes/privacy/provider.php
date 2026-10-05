@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace qbank_duplicate\local\privacy;
+namespace qbank_duplicate\privacy;
 
-use core_privacy\metadata\null_provider;
+use core_privacy\local\metadata\null_provider;
 
 /**
  * Privacy provider.
@@ -30,9 +30,9 @@ use core_privacy\metadata\null_provider;
  */
 class provider implements null_provider {
     /**
-     * Method get_reason.
+     * Get the language string identifier explaining why the plugin stores no personal data.
      *
-     * @return string Return value.
+     * @return string
      */
     public static function get_reason(): string {
         return 'privacy:metadata';
