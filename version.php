@@ -25,10 +25,10 @@
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->component = 'qbank_duplicate';
-$plugin->version = 2026100500;
+$plugin->version = 2026101200;
 $plugin->requires = 2024100700;
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '1.1.1';
+$plugin->release = '1.1.2';
 $plugin->dependencies = [
     'local_ai_bridge' => 2026093001,
 ];
