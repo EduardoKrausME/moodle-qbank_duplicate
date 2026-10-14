@@ -1,0 +1,31 @@
+name: Build installable Moodle ZIP
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout plugin
+        uses: actions/checkout@v4
+
+      - name: Build ZIP with the required duplicate root
+        run: git archive --format=zip --prefix=duplicate/ -o qbank_duplicate.zip HEAD
+
+      - name: Verify ZIP layout
+        run: |
+          test "$(unzip -Z -1 qbank_duplicate.zip | awk -F/ '{print $1}' | sort -u)" = "duplicate"
+          unzip -Z -1 qbank_duplicate.zip | grep -qx 'duplicate/version.php'
+          unzip -tq qbank_duplicate.zip
+
+      - name: Upload installable ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: qbank_duplicate-installable
+          path: qbank_duplicate.zip
+          if-no-files-found: error

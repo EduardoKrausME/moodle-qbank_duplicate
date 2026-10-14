@@ -77,3 +77,20 @@ Editing teachers and managers receive these capabilities by default. Students do
 
 These are safety valves, not accuracy controls. Raising them can find more borderline pairs, but it also increases
 database work and AI consumption.
+
+## Installing the plugin from a ZIP
+
+Use the **qbank_duplicate.zip** file attached to a GitHub Release. That archive contains the
+required top-level directory **duplicate/** and can be uploaded through *Site administration >
+Plugins > Install plugins*. The automatically generated GitHub **Source code (zip)** download
+uses a repository-derived directory name and is **not** a Moodle-installable package.
+
+The **Build installable Moodle ZIP** GitHub Actions workflow also publishes a
+**qbank_duplicate-installable** artifact on every push and pull request. Download that workflow
+artifact and extract the inner **qbank_duplicate.zip** before uploading it to Moodle.
+
+For a manual build from the repository root:
+
+```sh
+git archive --format=zip --prefix=duplicate/ -o qbank_duplicate.zip HEAD
+```
