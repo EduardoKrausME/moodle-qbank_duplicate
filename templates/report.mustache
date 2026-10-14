@@ -34,7 +34,7 @@
             <div class="alert alert-warning" role="alert">{{message}}</div>
         {{/hasmessage}}
 
-        <a href="{{toggleurl}}" class="btn btn-secondary btn-sm mb-3">{{togglelabel}}</a>
+        <a href="{{{toggleurl}}}" class="btn btn-secondary btn-sm mb-3">{{togglelabel}}</a>
 
         {{#haspairs}}
             <table class="generaltable">
@@ -50,8 +50,8 @@
                 <tbody>
                     {{#pairs}}
                         <tr>
-                            <td><a href="{{urla}}">{{{namea}}} [{{typea}}]</a></td>
-                            <td><a href="{{urlb}}">{{{nameb}}} [{{typeb}}]</a></td>
+                            <td><a href="{{{urla}}}">{{{namea}}} [{{typea}}]</a></td>
+                            <td><a href="{{{urlb}}}">{{{nameb}}} [{{typeb}}]</a></td>
                             <td>
                                 {{#isaierror}}
                                     {{aierrorlabel}}

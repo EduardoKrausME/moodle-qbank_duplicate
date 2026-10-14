@@ -178,7 +178,7 @@ if ($scan) {
         $templatedata['pairs'][] = [
             'urla' => $urla->out(false),
             'urlb' => $urlb->out(false),
-            // format_string returns Moodle-sanitized markup; the template handles its rendering.
+            // The format_string() function returns Moodle-sanitized markup; the template handles its rendering.
             'namea' => format_string($pair->namea),
             'nameb' => format_string($pair->nameb),
             'typea' => (string)$pair->qtypea,

@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace qbank_duplicate\output;
 
@@ -30,9 +30,19 @@ use templatable;
  */
 class report implements renderable, templatable {
     /**
+     * Data prepared for the report template.
+     *
+     * @var stdClass
+     */
+    private readonly stdClass $data;
+
+    /**
+     * Initialise the duplicate report.
+     *
      * @param stdClass $data Already validated and prepared report values.
      */
-    public function __construct(private readonly stdClass $data) {
+    public function __construct(stdClass $data) {
+        $this->data = $data;
     }
 
     /**
