@@ -16,7 +16,6 @@
 
 namespace qbank_duplicate;
 
-use core_text;
 
 /**
  * Text normalization helpers used before candidate generation.
@@ -49,7 +48,7 @@ class normalizer {
      * Normalize a question text for hashes and lexical comparisons.
      */
     public static function text(string $html): string {
-        $text = core_text::strtolower(self::plain($html));
+        $text = strtolower(self::plain($html));
         $text = preg_replace('/[^\p{L}\p{N}\p{M}\+\-\/=<>%\.]+/u', ' ', $text) ?? $text;
         $text = preg_replace('/\s+/u', ' ', $text) ?? $text;
         return trim($text);
@@ -78,7 +77,7 @@ class normalizer {
             if (isset($stop[$token])) {
                 continue;
             }
-            if (core_text::strlen($token) < 2 && !ctype_digit($token)) {
+            if (strlen($token) < 2 && !ctype_digit($token)) {
                 continue;
             }
             $tokens[] = $token;
@@ -96,7 +95,7 @@ class normalizer {
         $counts = array_count_values($tokens);
         $items = [];
         foreach ($counts as $token => $count) {
-            $items[] = ['token' => $token, 'count' => $count, 'length' => core_text::strlen($token)];
+            $items[] = ['token' => $token, 'count' => $count, 'length' => strlen($token)];
         }
         usort($items, static function (array $a, array $b): int {
             return $b['count'] <=> $a['count'] ?: $b['length'] <=> $a['length'] ?: strcmp($a['token'], $b['token']);
